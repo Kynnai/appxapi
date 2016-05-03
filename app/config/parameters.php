@@ -3,12 +3,14 @@ $container->setParameter('secret', '1c3b83b3e7c4c9e28dd8c5d8e51e53769c690209');
 $container->setParameter('locale', 'fr');
 
 // DB
+//var_dump(getenv('SYMFONY_APPX_BD_DRIVER'));exit();
 $container->setParameter('database.driver', 	getenv('SYMFONY_APPX_BD_DRIVER'));
 $container->setParameter('database.host', 		getenv('SYMFONY_APPX_BD_HOST'));
 $container->setParameter('database.port', 		getenv('SYMFONY_APPX_BD_PORT'));
 $container->setParameter('database.name', 		getenv('SYMFONY_APPX_BD_NAME'));
 $container->setParameter('database.user', 		getenv('SYMFONY_APPX_BD_USER'));
-$container->setParameter('database.password', getenv('SYMFONY_APPX_BD_PASS'));
+//$container->setParameter('database.password', getenv('SYMFONY_APPX_BD_PASS'));
+$container->setParameter('database.password','');
 
 // Courriel
 $container->setParameter('mailer.transport', 'gmail');
