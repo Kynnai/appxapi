@@ -21,6 +21,19 @@ class Follow
      */
     private $id;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="userId", type="integer")
+     */
+    private $userId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="boolean")
+     */
+    private $status;
 
     /**
      * Get id
@@ -30,6 +43,32 @@ class Follow
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set userId
+     *
+     * @param integer $userId
+     * @return Follow
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * Set status
+     *
+     * @param boolean $status
+     * @return Follow
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }
 

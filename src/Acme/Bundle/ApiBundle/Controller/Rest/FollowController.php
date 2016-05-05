@@ -7,17 +7,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 <?php
 use Symfony\Component\HttpFoundation\Request;
 
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\RequestParam;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Request\ParamFetcher;
-
-use JMS\Serializer\SerializationContext;
 
 use Acme\Bundle\ApiBundle\Entity\Follow;
 
@@ -34,4 +25,44 @@ use Acme\Bundle\ApiBundle\Entity\Follow;
  class FollowController extends FOSRestController
  {
 
+     /**
+      * @throws AccessDeniedException
+      * @ApiDoc(
+      *  description="Create one follow for the user",
+      *  authentication=true,
+      *  authenticationRoles={"ROLE_API"},
+      *  input={
+      *     "class"="Acme\Bundle\ApiBundle\Form\FollowType",
+      *     },
+      *     statusCodes={
+      *         201="Add successfully",
+      *         401="Unauthorized",
+      *         403="Validation errors"
+      *     }
+      * )
+      * @FOSRest\View(statusCode=201)
+      * @ParamConverter("fav", class="Acme\Bundle\ApiBundle\Entity\Follow", converter="fos_rest.request_body")
+      * @Post("/follow")
+      */
+     public function postFavAction(Request $request, Follow $follow)
+     {
+         $follow->setUserId($this->getUser()->getId());
+         $follow->setStatus(true);
+
+         $validator = $this->get('validator');
+         $errors = $validator->validate($follow);
+
+         if (count($errors) > 0)
+         {
+             $view = $this->view($errors, 403);
+             return $this->handleView($view);
+         }
+         else
+         {
+             $em = $this->getDoctrine()->getManager();
+             $em->persist($follow);
+             $em->flush();
+             return $follow;
+         }
+     }
  }
