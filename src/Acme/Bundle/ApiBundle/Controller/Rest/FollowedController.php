@@ -27,12 +27,63 @@ use Acme\Bundle\ApiBundle\Entity\Followed;
  */
  class FollowedController extends FOSRestController
  {
- 	public function deleteFollowedAction($id)
+   /** 
+    @throws AccessDeniedException
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  resource="/api/allFollowed",
+     *  description="Get all followed for the user",
+     *  tags={"Special route"},
+     *  statusCodes={
+     *      200="Successful",
+     *      401="Unauthorized",
+     *     },
+     * )
+     * @Security("has_role('ROLE_API')")
+     * @return array
+     *
+     */
+    public function getAllFollowedMeAction()
+    {
+        $userId = $this->getUser()->getId();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AcmeApiBundle:Followed')->findBy(
+            array('userId'=>$userId)); 
+
+        $view = $this->view($entities, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param int $id
+     * 
+     * @ApiDoc(
+     *  description="Get one followed item",
+     *  authentication=true,
+     *  authenticationRoles={"ROLE_API"},
+     *  statusCodes={
+     *      200="Successful",
+     *      401="Unauthorized",
+     *      410={
+     *        "Returned when the comment is not found",
+     *        "Returned when something else is not found"
+     *      }
+     *   }
+     * )
+     *
+     * @throws AccessDeniedException
+     * @return Followed
+     *
+     * @FOSRest\View()
+     */
+    public function getFollowedAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $entityToDelete = $em->getRepository('AcmeApiBundle:Followed')->find($id);
+        $followed = $em->getRepository('AcmeApiBundle:Followed')->find($id);
 
-        if ($entityToDelete == null) 
+        if ($followed == null) 
         {
             $data=array(
                 "code"=> 410,
@@ -43,10 +94,46 @@ use Acme\Bundle\ApiBundle\Entity\Followed;
         } 
         else 
         {
-            if ($this->getUser()->getId() != $entityToDelete->getUser()->getId()) {
+            return $followed;
+        }
+    }
+
+
+
+    /**
+     * @throws AccessDeniedException
+     * @ApiDoc(
+     *  description="Delete one followed user",
+     *  authentication=true,
+     *  authenticationRoles={"ROLE_API"},
+     *  statusCodes={
+     *      200="Deleted successfully",
+     *      401="Unauthorized",
+     *      410="Not found or already deleted"
+     *  }
+     * )
+     * @FOSRest\View(statusCode=200)
+     */
+    public function deleteFollowedAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $followedToDelete = $em->getRepository('AcmeApiBundle:Followed')->find($id);
+
+        if ($followedToDelete == null) 
+        {
+            $data=array(
+                "code"=> 410,
+                "message"=> "Not found",
+                );
+            $view = $this->view($data, 410);
+            return $this->handleView($view);
+        } 
+        else 
+        {
+            if ($this->getUser()->getId() != $followedToDelete->getUserId()) {
                 throw new AccessDeniedException();
             }
-            $em->remove($entityToDelete);
+            $em->remove($followedToDelete);
             $em->flush();
         }
     }
