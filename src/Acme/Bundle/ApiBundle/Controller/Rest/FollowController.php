@@ -1,10 +1,11 @@
+<?php
 namespace Acme\Bundle\ApiBundle\Controller\Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-<?php
+
 use Symfony\Component\HttpFoundation\Request;
 
 use FOS\RestBundle\Controller\FOSRestController;
@@ -15,10 +16,7 @@ use Acme\Bundle\ApiBundle\Entity\Follow;
 /**
  * FollowController 
  * @author F. Bérubé, E. Gélinas Gagnon
- * 
-   $this->getUser()->getId();
-   $this->getUser()->getUsername();
-   $this->getUser()->getRoles();
+ *
  * @Security("has_role('ROLE_API')")
  * @FOSRest\NamePrefix("api_")
  */
@@ -44,7 +42,7 @@ use Acme\Bundle\ApiBundle\Entity\Follow;
       * @ParamConverter("fav", class="Acme\Bundle\ApiBundle\Entity\Follow", converter="fos_rest.request_body")
       * @Post("/follow")
       */
-     public function postFavAction(Request $request, Follow $follow)
+     public function postFollowAction(Request $request, Follow $follow)
      {
          $follow->setUserId($this->getUser()->getId());
          $follow->setStatus(true);
@@ -66,3 +64,5 @@ use Acme\Bundle\ApiBundle\Entity\Follow;
          }
      }
  }
+
+?>
