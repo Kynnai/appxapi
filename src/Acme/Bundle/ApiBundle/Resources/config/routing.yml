@@ -27,8 +27,8 @@ acme_api_login:
 
 acme_api_follow:
     type:           rest
-    resource:       Acme\Bundle\ApiBundle\Controller\FollowController
+    resource:       Acme\Bundle\ApiBundle\Controller\Rest\FollowController
 
 acme_api_followed:
     type:           rest
-    resource:       Acme\Bundle\ApiBundle\Controller\FolowedController
+    resource:       Acme\Bundle\ApiBundle\Controller\Rest\FolowedController
