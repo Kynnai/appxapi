@@ -24,3 +24,11 @@ acme_api_contact:
 acme_api_login:
     type:           rest
     resource:       Acme\Bundle\ApiBundle\Controller\AuthenticationController
+
+acme_api_follow:
+    type:           rest
+    resource:       Acme\Bundle\ApiBundle\Controller\FollowController
+
+acme_api_followed:
+    type:           rest
+    resource:       Acme\Bundle\ApiBundle\Controller\FolowedController
