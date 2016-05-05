@@ -31,4 +31,4 @@ acme_api_follow:
 
 acme_api_followed:
     type:           rest
-    resource:       Acme\Bundle\ApiBundle\Controller\Rest\FolowedController
+    resource:       Acme\Bundle\ApiBundle\Controller\Rest\FollowedController
